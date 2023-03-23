@@ -22,38 +22,36 @@ public class ModeloEmpleado extends Empleado {
 
     public List<Empleado> listarEmpleados(String filtro) {
         String sql = "select * from empleado";
+        List<Empleado> listaEmp = new ArrayList<>();
 
         if (!filtro.isEmpty()) {
-            sql += "WHERE UPPER(emp_cedula) like UPPER('%" + filtro + "%') ";
-            sql += "OR UPPER(emp_nombres) like UPPER('%" + filtro + "%') ";
-            sql += "OR UPPER(emp_apellidos) like UPPER('%" + filtro + "%');";
+            sql += " WHERE UPPER(CONCAT_WS(' ', emp_cedula, emp_nombres, emp_apellidos LIKE UPPER(?)";
         }
 
-        ResultSet rs = conpg.consulta(sql);
-        List<Empleado> lista = new ArrayList<Empleado>();
-        try {
-            while (rs.next()) {
-                Empleado emp = new Empleado();
-                emp.setId_emp(rs.getInt("emp_id"));
-                emp.setCedula(rs.getString("emp_cedula"));
-                emp.setNombres(rs.getString("emp_nombres"));
-                emp.setApellidos(rs.getString("emp_apellidos"));
-                emp.setFechaContrato(rs.getDate("emp_fecha_contrato"));
-                emp.setSalario(rs.getDouble("emp_salario"));
-                emp.setDiscapacidad(rs.getBoolean("emp_discapacidad"));
-                emp.setHorario(rs.getString("emp_horario"));
-                lista.add(emp);
+        try (PreparedStatement ps = conpg.getCon().prepareStatement(sql)) {
+            if (!filtro.isEmpty()) {
+                ps.setString(1, "%" + filtro + "%");
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    // Nota: Se deben sacar todos los datos ya que estos se van a guardar en una lista, y esta lista sera usada para actualizar
+                    Empleado empleado = new Empleado();
+                    empleado.setId_emp(rs.getInt("emp_id"));
+                    empleado.setCedula(rs.getString("emp_cedula"));
+                    empleado.setNombres(rs.getString("emp_nombres"));
+                    empleado.setApellidos(rs.getString("emp_apellidos"));
+                    empleado.setFechaContrato(rs.getDate("emp_fecha_contrato"));
+                    empleado.setSalario(rs.getDouble("emp_salario"));
+                    empleado.setDiscapacidad(rs.getBoolean("emp_discapacidad"));
+                    empleado.setHorario(rs.getString("emp_horario"));
+                    listaEmp.add(empleado);
+                }
             }
         } catch (SQLException ex) {
             Logger.getLogger(ModeloEmpleado.class.getName()).log(Level.SEVERE, null, ex);
         }
-        try {
-            rs.close();
-            return lista;
-        } catch (SQLException ex) {
-            Logger.getLogger(ModeloEmpleado.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
+        return listaEmp;
     }
 
     public boolean CrearEmpleado() {

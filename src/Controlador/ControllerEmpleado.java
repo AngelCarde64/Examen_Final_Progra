@@ -2,6 +2,7 @@ package Controlador;
 
 import Modelo.*;
 import Vista.Empleado_View;
+import Vista.VistaMP;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -19,6 +20,7 @@ public class ControllerEmpleado {
 
     private ModeloEmpleado modelo;
     private Empleado_View vista;
+    private VistaMP vistaMP;
     private String id_empleado = "", criterio = "";
     Validaciones validaciones = new Validaciones();
     DefaultTableModel mTablaModel = new DefaultTableModel(
@@ -26,18 +28,20 @@ public class ControllerEmpleado {
 
     JFileChooser jfc;
 
-    public ControllerEmpleado(ModeloEmpleado modelo, Empleado_View vista) {
+    public ControllerEmpleado(ModeloEmpleado modelo, Empleado_View vista, VistaMP vistaMP) {
         this.modelo = modelo;
         this.vista = vista;
-        vista.setVisible(true);
-        vista.getLblAlertaResultado().setVisible(false);
-        CargarEmpleados();
+        this.vistaMP = vistaMP;
     }
 
     public void iniciaControl() {
+        vista.setVisible(true);
+        vista.getLblAlertaResultado().setVisible(false);
+        CargarEmpleados();
+        vistaMP.getjButtonIMPRIMIR().addActionListener(l -> MostrarParametrosImprimir());
         vista.getBtnActualizar().addActionListener(l -> CargarEmpleados());
         vista.getBtnBuscar().addActionListener(l -> buscar());
-        vista.getBtnImprimir().addActionListener(l -> imprimirEmpleados());
+        vista.getBtnImprimir().addActionListener(l -> MostrarParametrosImprimir());
         vista.getBtnCrear().addActionListener(l -> abrirDialogo(1));
         vista.getBtnEditar().addActionListener(l -> abrirDialogo(2));
         vista.getBtnAceptar().addActionListener(l -> CrearEditarEmpleado());
@@ -264,24 +268,6 @@ public class ControllerEmpleado {
         }
     }
 
-    public void ImprimirEmpleados() {
-        ConectPG cpg = new ConectPG();
-        try {
-            JasperReport jr = (JasperReport) JRLoader.loadObject(getClass().getResource("/vista/reportes/Blank_A4.jasper"));
-            Map<String, Object> parametros = new HashMap<String, Object>();
-            parametros.put("limitea", Integer.parseInt(vista.getTxtmaximo().getText()));
-            parametros.put("limiteb", Integer.parseInt(vista.getTxtminimo().getText()));
-            parametros.put("titulo", vista.getTxttitulo().getText());
-            JasperPrint jp = JasperFillManager.fillReport(
-                    jr,
-                    parametros, cpg.getCon());
-            JasperViewer jv = new JasperViewer(jp, false);
-            jv.setVisible(true);
-        } catch (JRException ex) {
-            Logger.getLogger(ControllerEmpleado.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
     private void activarJdialog(String titulo) {
         vista.getDlgEmpleado().setTitle(titulo);
         vista.getDlgEmpleado().setSize(680, 330);
@@ -297,11 +283,21 @@ public class ControllerEmpleado {
         vista.getjComboBoxHorario().setSelectedItem(1);
         vista.getTxtSalario().setText("");
     }
+    
+    private void MostrarParametrosImprimir()
+    {
+        vista.getJdialogparametros().setTitle("Parametros");
+        vista.getJdialogparametros().setSize(280, 250);
+        vista.getJdialogparametros().setLocationRelativeTo(vista);
+        vista.getJdialogparametros().setVisible(true);
+        vista.getGenreport().addActionListener(l -> imprimirEmpleados());
+    }
 
     private void imprimirEmpleados() {
+        vista.getJdialogparametros().setVisible(false);
         ConectPG cpg = new ConectPG();
         try {
-            JasperReport jr = (JasperReport) JRLoader.loadObject(getClass().getResource("/vista/reportes/MVC - ANGEL CARDENAS - M3A.jasper"));
+            JasperReport jr = (JasperReport) JRLoader.loadObject(getClass().getResource("/vista/reportes/MVC - EXAMEN - ANGEL CARDENAS.jasper"));
             Map<String, Object> parametros = new HashMap<String, Object>();
             parametros.put("limitea", Integer.parseInt(vista.getTxtmaximo().getText()));
             parametros.put("limiteb", Integer.parseInt(vista.getTxtminimo().getText()));
@@ -314,6 +310,5 @@ public class ControllerEmpleado {
         } catch (JRException ex) {
             Logger.getLogger(ControllerEmpleado.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 }

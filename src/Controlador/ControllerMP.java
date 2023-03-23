@@ -27,7 +27,7 @@ public class ControllerMP {
         ModeloEmpleado m = new ModeloEmpleado();
         Empleado_View emple_View = new Empleado_View();
         showForm(emple_View);
-        ControllerEmpleado c = new ControllerEmpleado(m, emple_View);
+        ControllerEmpleado c = new ControllerEmpleado(m, emple_View, mainView);
         c.iniciaControl();
     }
     
