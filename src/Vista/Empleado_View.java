@@ -406,7 +406,7 @@ public class Empleado_View extends javax.swing.JPanel {
         btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
         btnCancelar.setText("Cancelar");
 
-        jComboBoxDiscapacidad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Diurna", "Nocturna", "Mixta" }));
+        jComboBoxDiscapacidad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "True", "False" }));
 
         lbl_Cedula.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lbl_Cedula.setText("Cedula");
@@ -441,9 +441,7 @@ public class Empleado_View extends javax.swing.JPanel {
                                     .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(dlgEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(dlgEmpleadoLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBoxHorario, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jComboBoxHorario, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(dlgEmpleadoLayout.createSequentialGroup()
                         .addGroup(dlgEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbl_discapacidad)
@@ -472,7 +470,6 @@ public class Empleado_View extends javax.swing.JPanel {
             .addGroup(dlgEmpleadoLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addComponent(ID_DB_TXT)
-                .addGap(18, 18, 18)
                 .addGroup(dlgEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(dlgEmpleadoLayout.createSequentialGroup()
                         .addGroup(dlgEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -493,9 +490,6 @@ public class Empleado_View extends javax.swing.JPanel {
                     .addGroup(dlgEmpleadoLayout.createSequentialGroup()
                         .addGroup(dlgEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(dlgEmpleadoLayout.createSequentialGroup()
-                                .addGap(100, 100, 100)
-                                .addComponent(lbl_Salario))
-                            .addGroup(dlgEmpleadoLayout.createSequentialGroup()
                                 .addGroup(dlgEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(lbl_discapacidad)
                                     .addComponent(jComboBoxDiscapacidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -505,8 +499,10 @@ public class Empleado_View extends javax.swing.JPanel {
                                     .addComponent(jComboBoxHorario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(dlgEmpleadoLayout.createSequentialGroup()
                                 .addGap(100, 100, 100)
-                                .addComponent(txtSalario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)))
+                                .addGroup(dlgEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lbl_Salario)
+                                    .addComponent(txtSalario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)))
                 .addGroup(dlgEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jdcFechaContrato, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_fecContrato))
@@ -514,7 +510,7 @@ public class Empleado_View extends javax.swing.JPanel {
                 .addGroup(dlgEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(55, Short.MAX_VALUE))
+                .addContainerGap(64, Short.MAX_VALUE))
         );
 
         txttitulo.setText("Reporte Empleados");

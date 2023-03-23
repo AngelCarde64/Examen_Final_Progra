@@ -20,6 +20,10 @@ public class ControllerEmpleado {
     private ModeloEmpleado modelo;
     private Empleado_View vista;
     private String id_empleado = "", criterio = "";
+    Validaciones validaciones = new Validaciones();
+    DefaultTableModel mTablaModel = new DefaultTableModel(
+            new Object[]{"ID", "Cedula", "Nombres", "Apellidos", "Fecha Contratación", "Salario", "Discapacidad", "Horario"}, 0);
+
     JFileChooser jfc;
 
     public ControllerEmpleado(ModeloEmpleado modelo, Empleado_View vista) {
@@ -38,6 +42,7 @@ public class ControllerEmpleado {
         vista.getBtnEditar().addActionListener(l -> abrirDialogo(2));
         vista.getBtnAceptar().addActionListener(l -> CrearEditarEmpleado());
         vista.getBtnCancelar().addActionListener(l -> cancelar());
+
         vista.getTblEmpleados().addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 verIdDatos(evt);
@@ -46,10 +51,30 @@ public class ControllerEmpleado {
 
         vista.getBtnEliminar().addActionListener(l -> eliminar());
 
-        //busqueda incremental
-        vista.getTxt_Buscar().addKeyListener(new java.awt.event.KeyAdapter() {
+        vista.getJtextfield_Buscar().addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 buscar();
+            }
+        });
+
+        vista.getField_Cedula().addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                validaciones.IngresarSoloNumeros(evt);
+            }
+        });
+        vista.getTxtNombre().addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                validaciones.IngresarSoloLetras(evt);
+            }
+        });
+        vista.getTxtApellido().addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                validaciones.IngresarSoloLetras(evt);
+            }
+        });
+        vista.getTxtSalario().addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                validaciones.ValiSueldo(evt);
             }
         });
     }
@@ -58,6 +83,7 @@ public class ControllerEmpleado {
         DefaultTableCellRenderer render = new DefaultTableCellRenderer();
         vista.getTblEmpleados().setDefaultRenderer(Object.class, new ImagenTabla());
         vista.getTblEmpleados().setRowHeight(50);
+        vista.getTblEmpleados().setModel(mTablaModel);
 
         DefaultTableModel mTabla;
         mTabla = (DefaultTableModel) vista.getTblEmpleados().getModel();
@@ -76,6 +102,7 @@ public class ControllerEmpleado {
         DefaultTableCellRenderer render = new DefaultTableCellRenderer();
         vista.getTblEmpleados().setDefaultRenderer(Object.class, new ImagenTabla());
         vista.getTblEmpleados().setRowHeight(50);
+        vista.getTblEmpleados().setModel(mTablaModel);
 
         DefaultTableModel mTabla;
         mTabla = (DefaultTableModel) vista.getTblEmpleados().getModel();
@@ -102,9 +129,6 @@ public class ControllerEmpleado {
         id_empleado = "";
     }
 
-    /**
-     * ---> Para abrir un dialogo de editar o crear la empleado
-     */
     private void abrirDialogo(int op) {
         String titulo;
         if (op == 1) {
@@ -130,14 +154,14 @@ public class ControllerEmpleado {
         ModeloEmpleado empleado = new ModeloEmpleado();
         empleado = empleado.MostrarEmpleadoAEditar(id_empleado);
 
-//        vista.getTxtDni().setText(empleado.getIdEmpleado());
-//        vista.getTxtNombre().setText(empleado.getNombre());
-//        vista.getTxtApellido().setText(empleado.getApellido());
-//        vista.getJdcFechaNac().setDate(empleado.getFechanacimiento());
-//        vista.getTxtTelefono().setText(empleado.getTelefono());
-//        vista.getjComboBoxSexo().setSelectedItem(empleado.getSexo());
-//        vista.getTxtSueldo().setText(empleado.getSueldo() + "");
-//        vista.getTxtCupo().setText(empleado.getCupo() + "");
+        vista.getID_DB_TXT().setText("ID: " + String.valueOf(empleado.getId_emp()));
+        vista.getField_Cedula().setText(empleado.getCedula());
+        vista.getTxtNombre().setText(empleado.getNombres());
+        vista.getTxtApellido().setText(empleado.getApellidos());
+        vista.getJdcFechaContrato().setDate(empleado.getFechaContrato());
+        vista.getjComboBoxDiscapacidad().setSelectedIndex(empleado.getDiscapacidad() == true ? 0 : 1);
+        vista.getjComboBoxHorario().setSelectedItem(empleado.getHorario().toString());
+        vista.getTxtSalario().setText(String.valueOf(empleado.getSalario()));
     }
 
     private void CrearEditarEmpleado() {
@@ -181,26 +205,21 @@ public class ControllerEmpleado {
         }
     }
 
-    private ModeloEmpleado recuperarDatos(ModeloEmpleado per) {
-//        String identificacion = vista.getTxtDni().getText();
-//        String nombres = vista.getTxtNombre().getText();
-//        String apellidos = vista.getTxtApellido().getText();
-//        Date fechaNac = vista.getJdcFechaNac().getDate();
-//        String telefono = vista.getTxtTelefono().getText();
-//        String sexo = vista.getjComboBoxSexo().getSelectedItem().toString();
-//        int sueldo = Integer.parseInt(vista.getTxtSueldo().getText());
-//        int cupo = Integer.parseInt(vista.getTxtCupo().getText());
-//
-//        per.setIdEmpleado(identificacion);
-//        per.setNombre(nombres);
-//        per.setApellido(apellidos);
-//        per.setFechanacimiento(fechaNac);
-//        per.setTelefono(telefono);
-//        per.setSexo(sexo);
-//        per.setSueldo(sueldo);
-//        per.setCupo(cupo);
+    private ModeloEmpleado recuperarDatos(ModeloEmpleado emple) {
+        int id = Integer.parseInt(vista.getID_DB_TXT().getText().replace("ID: ", ""));;
+        emple.setId_emp(id);
+        emple.setCedula(vista.getField_Cedula().getText());
+        emple.setNombres(vista.getTxtNombre().getText());
+        emple.setApellidos(vista.getTxtApellido().getText());
 
-        return per;
+        java.sql.Date datesql = new java.sql.Date(vista.getJdcFechaContrato().getDate().getTime());
+        emple.setFechaContrato(datesql);
+        emple.setDiscapacidad(vista.getjComboBoxDiscapacidad().getSelectedIndex() == 0);
+        emple.setHorario(vista.getjComboBoxHorario().getSelectedItem().toString());
+        System.out.println("sasasa:" + vista.getjComboBoxHorario().getSelectedItem().toString());
+        emple.setSalario(Double.valueOf(vista.getTxtSalario().getText()));
+
+        return emple;
     }
 
     private void eliminar() {
@@ -233,7 +252,7 @@ public class ControllerEmpleado {
         return !vista.getField_Cedula().getText().equals("") && !vista.getTxtNombre().getText().equals("") && !vista.getTxtApellido().getText().equals("")
                 && !vista.getJdcFechaContrato().toString().equals("") && !vista.getTxtSalario().getText().equals("");
     }
-    
+
     private void buscar() {
         criterio = vista.getJtextfield_Buscar().getText().trim();
 

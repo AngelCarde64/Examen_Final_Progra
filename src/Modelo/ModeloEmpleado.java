@@ -24,13 +24,9 @@ public class ModeloEmpleado extends Empleado {
         String sql = "select * from empleado";
 
         if (!filtro.isEmpty()) {
-            sql += "WHERE UPPER(emp_id) like UPPER('%" + filtro + "%') ";
-            sql += "OR UPPER(emp_cedula) like UPPER('%" + filtro + "%') ";
+            sql += "WHERE UPPER(emp_cedula) like UPPER('%" + filtro + "%') ";
             sql += "OR UPPER(emp_nombres) like UPPER('%" + filtro + "%') ";
-            sql += "OR UPPER(emp_apellidos) like UPPER('%" + filtro + "%') ";
-            sql += "OR UPPER(emp_fecha_contrato) like UPPER('%" + filtro + "%') ";
-            sql += "OR UPPER(emp_discapacidad) like UPPER('%" + filtro + "%') ";
-            sql += "OR UPPER(emp_horario) like UPPER('%" + filtro + "%') ";
+            sql += "OR UPPER(emp_apellidos) like UPPER('%" + filtro + "%');";
         }
 
         ResultSet rs = conpg.consulta(sql);
